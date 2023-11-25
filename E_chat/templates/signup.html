@@ -1,0 +1,31 @@
+{% extends 'base.html'%}
+
+{% block title %}Sign Up{% endblock title %}
+
+{% block header %} <h1 class="d-flex justify-content-center">Sign Up</h1> {% endblock header %}
+
+{% block content %}
+
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <form method="post">
+            {{ form.hidden_tag() }}
+
+            {{ form.username.label(class = 'form-label') }}
+            {{form.username(class = 'form-control', placeholder = form.username.data ) }}
+            <br />
+
+            {{ form.password.label(class = 'form-label') }}
+            {{form.password(class = 'form-control', placeholder=form.password.data ) }}
+            <br />
+
+            {{ form.confirm_pass.label(class = 'form-label') }}
+            {{form.confirm_pass(class = 'form-control', placeholder=form.confirm_pass.data ) }}
+            <br />
+
+            {{ form.submit(class = 'btn btn-outline-success') }}
+
+        </form>
+        <br>
+    </div>
+{% endblock content %}
+    

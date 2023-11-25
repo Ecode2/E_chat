@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+
+{% block header %} 
+    <div class="container-md mb-4 d-flex justify-content-between border-bottom border-dark-subtle">
+        <h2>Chat Rooms</h2>
+        <button type="button" class="btn btn-outline-info opacity-50" data-bs-toggle='modal' data-bs-target="#FormModal">Create Room</button>
+    </div> 
+
+    <article class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="ModalForm" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="ModalForm">Create New Chatroom</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        {{ form.hidden_tag() }}
+
+                        {{ form.roomname.label(class = 'form-label') }}
+                        {{form.roomname(class = 'form-control', placeholder = form.roomname.data ) }}
+                        <br />
+
+                        {{ form.roompass.label(class = 'form-label') }}
+                        {{form.roompass(class = 'form-control', placeholder=form.roompass.data ) }}
+                        <br />
+
+                        {{ form.submit(class = 'btn btn-outline-success') }}
+
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </article>
+
+{% endblock header %}
+
+{% block content %}
+    
+    <section class="container-md d-flex flex-column mb-3">
+        {% for room in rooms %}
+
+           <div class="rounded-3 mb-2 p-1 d-flex justify-content-between border border-secondary bg-outline"> 
+                <button type="button" class="btn" onclick="document.getElementById('roomId{{room.id}}').value = '{{room.id}}' " id="{{room.id}}" data-bs-toggle='modal' data-bs-target="#Pass{{room.id}}"> {{ room.roomname }} </button>
+                <button onclick="copyLink('http://' + document.domain + ':' + location.port + '{{url_for('chat.room', room_id=room.id)}}')">Copy</button>
+            </div>
+
+            <article class="modal fade" id="Pass{{room.id}}" tabindex="-1" aria-labelledby="Modal{{room.id}}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="Modal{{room.id}}"> {{room.roomname}} </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" arial-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post">
+                                {{ Rpass.hidden_tag() }}
+        
+                                {{ Rpass.roomId(class = 'form-control', id = "roomId"+ room.id|string, style="display: none;" ) }}
+                                <br />
+        
+                                {{ Rpass.roompass.label(class = 'form-label') }}
+                                {{ Rpass.roompass(class = 'form-control') }}
+                                <br />
+        
+                                {{ Rpass.submit(class = 'btn btn-outline-success') }}
+        
+                            </form>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        {% endfor %}
+    </section>
+
+{% endblock content %}
+
+{% block script %}
+    <script>
+        // copy room link
+        function copyLink(link) {
+          navigator.clipboard.writeText(link);
+          alert('Link copied to clipboard!');
+        }
+
+        //activate modal if password has not been filled
+        if("{{usr}}" != ""){ var passbtn = document.getElementById("{{usr}}")};
+
+        if ("{{roomvalidate}}" == "True"){
+            passbtn.click();
+        };
+            
+        
+    </script>
+{% endblock script %}

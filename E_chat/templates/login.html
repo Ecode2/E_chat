@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+
+{% block title %}Login{% endblock title %}
+
+{% block header %} <h1 class="d-flex justify-content-center">Login </h1> {% endblock header %}
+
+{% block content %}
+
+    <div class="shadow p-3 mb-5 bg-body rounded">
+        <form method="post">
+            {{ form.hidden_tag() }}
+
+            {{ form.username.label(class = 'form-label') }}
+            {{form.username(class = 'form-control', placeholder = form.username.data ) }}
+            <br />
+
+            {{ form.password.label(class = 'form-label') }}
+            {{form.password(class = 'form-control', placeholder=form.password.data ) }}
+            <br />
+
+            {{ form.submit(class = 'btn btn-outline-success') }}
+
+        </form>
+        <br>
+    </div>
+{% endblock content %}
+    

@@ -1,0 +1,48 @@
+from flask import Flask, render_template
+
+def create_app(config_filename= None):
+    
+    app = Flask(__name__)
+    app.config["SECRET_KEY"] = "development"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Chat.db"
+
+    if config_filename is not None:
+        app.config.from_pyfile(config_filename)
+    
+    # Invalid url
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("404.html"), 404
+
+    # Internal server erroe
+    @app.errorhandler(500)
+    def page_not_found(e):
+        return render_template("500.html"), 500
+
+    # Initialise database
+    from .model.db import db
+    with app.app_context():
+        db.init_app(app=app)
+        db.create_all()
+
+    # Import blueprints 
+    #from .events import sio
+    from .views.admin.admin import admin
+    from .views.auth.auth import auth, login_manager
+    from .views.frontend.home import home
+    from .views.frontend.chat import chat
+    from E_chat.events import sio
+
+    # Initialise blueprints
+    app.register_blueprint(admin)
+    app.register_blueprint(auth)
+    app.register_blueprint(home)
+    app.register_blueprint(chat)
+
+    # Initialise Login Manager
+    login_manager.init_app(app)
+
+    # Initialise socketio
+    sio.init_app(app)
+    
+    return app

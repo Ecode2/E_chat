@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %} Room: {{room.roomname}} {% endblock title %}
+
+{% block body %} id="body" onLoad="connect()" onUnload="disconnect()" {% endblock body %}
+
+{% block header %}
+    <h1>Chatroom: {{room.roomname}} </h1>
+{% endblock header %}
+
+
+{% block content %}
+    <a href="{{ url_for('home.index') }}" class="btn btn-secondary top left" onclick="leaveroom()"> Leave </a>
+    <ul class="container-sm shadow" style="list-style: none;" id="messages">
+        
+        {% for chat in chats %}
+
+            <li> 
+                <span> 
+                {% for user in users %}
+                    {% if user.id == chat.author_id %} {{user.username}}: {% endif %}
+                {% endfor %}
+                </span> 
+                {{chat.body}}
+            </li>
+        {% endfor %}
+    </ul>
+    <form id="msg-form">
+        <input type="text" id="msg-input" autocomplete="off">
+        <button type="submit">Send</button>
+    </form>
+{% endblock content %}
+    
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+
+<script>
+    const sio = io({autoconnect: false});
+
+    // Join the room from the server
+    function connect(){  
+        sio.connect();
+        sio.emit("join", {room_id: '{{room.id}}'});
+        console.log("Joined room");
+    };
+
+    // Leave the room by leaving the webpage
+    function disconnect(){
+        sio.emit("leave", {room_id: '{{room.id}}'});
+        console.log("left room")
+    };
+
+    // leave room with button
+    function leaveroom() {
+        sio.emit("leave", {room_id: "{{room.id}}"});
+        console.log("left room by button")
+    };
+
+    // receive message function
+    function displayMessage(data) {
+        const ul = document.getElementById("messages");
+
+        var li = document.createElement("li");
+        var li_span = document.createElement("span");
+
+        li_span.innerHTML = data["sender"] + ": "
+
+        li.appendChild(li_span);
+        li.textContent += data["message"];
+
+        ul.appendChild(li);
+        ul.scrollTop = ul.scrollHeight;
+        console.log("received message");
+    };
+
+    // Send message to  server
+    const MsgForm = document.getElementById("msg-form");
+
+    MsgForm.onsubmit = function(event) {
+        event.preventDefault();
+
+        var msgInput = document.getElementById("msg-input");
+        var message = msgInput.value.trim();
+
+        if (message != "") {
+            sio.emit("message", {"sender": "{{current_user.username}}", "message": message, "room_id": "{{room.id}}"});
+            msgInput.value = '';
+            console.log("msg not empty")
+        };
+        console.log("submited message")
+    };
+
+    //display message to screen
+    sio.on("message", function(data) { displayMessage(data) });
+    //sio.on("message", function() { console.log("received a message"); }, namespace="/chat/{{room.id}}" );
+
+
+</script>
+{% endblock script %}

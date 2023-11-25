@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-md sticky-top" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">E-chat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+
+            {% if current_user.is_authenticated %}
+            <li class="nav-item"> <a class="nav-link" href="#">{{current_user.username}}</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="{{url_for('auth.logout')}}">Logout</a> </li>
+            {% else %}
+            <li class="nav-item"> <a class="nav-link" href="{{url_for('auth.signup')}}">Sign up</a> </li>
+            <li class="nav-item"> <a class="nav-link" href="{{url_for('auth.login')}}">Login</a> </li>
+            {% endif %}
+         
+        </ul>
+      </div>
+    </div>
+</nav>
