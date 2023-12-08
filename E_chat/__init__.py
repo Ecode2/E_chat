@@ -46,3 +46,12 @@ def create_app(config_filename= None):
     sio.init_app(app)
     
     return app
+    
+    
+
+if __name__=='__main__':
+
+    from E_chat.events import sio
+    app = create_app()
+    
+    sio.run(app=app)

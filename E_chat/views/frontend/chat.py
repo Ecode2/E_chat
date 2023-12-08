@@ -25,10 +25,7 @@ def room(room_id):
         session["rid"] = room_id
         return redirect(url_for("home.index", roomvalidate='True'))
 
-    # reset session values
-    session["rid"] = ""
-    session["room_id"] = ""
-    session["room_validate"] = 'False'
+    
 
     room = Chatroom.query.filter_by(id=room_id).first()
     chats = Chat.query.filter_by(room_id=room_id)
@@ -51,6 +48,10 @@ def on_leave(data):
     leave_room(room_id)
     emit("message", {"sender": "System", "message": f"{current_user.username} left the room "}, room=room_id, broadcast=True)
     print("Left room")
+    # reset session values
+    session["rid"] = ""
+    session["room_id"] = ""
+    session["room_validate"] = 'False'
 
 
 @sio.on("message")

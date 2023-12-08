@@ -10,7 +10,7 @@
 
 
 {% block content %}
-    <a href="{{ url_for('home.index') }}" class="btn btn-secondary top left" onclick="leaveroom()"> Leave </a>
+    <a href="{{ url_for('home.index') }}" onclick="leaveroom()"> <button type="button" class="btn-close"></button> </a>
     <ul class="container-sm shadow" style="list-style: none;" id="messages">
         
         {% for chat in chats %}
@@ -27,7 +27,7 @@
     </ul>
     <form id="msg-form">
         <input type="text" id="msg-input" autocomplete="off">
-        <button type="submit">Send</button>
+        <button type="submit" class="btn-close">Send</button>
     </form>
 {% endblock content %}
     

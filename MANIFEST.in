@@ -1,0 +1,5 @@
+graft E_chat/static
+graft E_chat/templates
+graft E_chat/model
+graft E_chat/views
+global-exlude *.pyc
