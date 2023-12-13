@@ -1,0 +1,6 @@
+flask_login
+flask_sqlalchemy
+flask_wtf
+functools
+flask_socketio
+flask
