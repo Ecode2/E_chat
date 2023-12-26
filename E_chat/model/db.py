@@ -26,6 +26,7 @@ class Chat(db.Model):
     def __repr__(self) -> str:
         return f"<Chat {self.body}>"
 
+    
 class Chatroom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     roomname = db.Column(db.String(50), nullable=False, unique=True)

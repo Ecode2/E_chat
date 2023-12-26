@@ -1,10 +1,10 @@
-import functools
 from flask import Blueprint, render_template, redirect, url_for, session, flash
 from E_chat.events import sio
 from E_chat.model.db import db, Chatroom, Chat, Users
 from flask_login import current_user, login_required
 from E_chat.events import sio
 from flask_socketio import join_room, leave_room, emit
+from datetime import datetime
 
 chat = Blueprint('chat',__name__, url_prefix="/chat")
 
@@ -29,8 +29,12 @@ def room(room_id):
 
     room = Chatroom.query.filter_by(id=room_id).first()
     chats = Chat.query.filter_by(room_id=room_id)
+    print(chats)
+    
+
     users = Users.query.all()
     return render_template('room.html', current_user=current_user, room=room, chats=chats, users=users)
+
 
 @sio.on("join")
 @login_required

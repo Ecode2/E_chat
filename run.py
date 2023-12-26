@@ -5,4 +5,4 @@ app = create_app()
 if __name__=='__main__':
 
     from E_chat.events import sio
-    sio.run(app=app)
+    sio.run(app=app, port=8000)

@@ -4,35 +4,97 @@
 
 {% block body %} id="body" onLoad="connect()" onUnload="disconnect()" {% endblock body %}
 
-{% block header %}
-    <h1>Chatroom: {{room.roomname}} </h1>
-{% endblock header %}
+{% block navItem %}
+    <li class="nav-item" title="{{current_user.username}}" data-bs-toggle="tooltip" data-bs-placement="right">
+        <a class="nav-link py-3 border-bottom rounded-0" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-square">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"></path>
+        </svg>
+        </a>
+    </li>
+
+    <li class="nav-item" title="back" data-bs-toggle="tooltip" data-bs-placement="right">
+        <a class="nav-link py-3 border-bottom rounded-0" href="{{ url_for('home.index') }}" onclick="leaveroom()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-arrow-left-square">
+                <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+            </svg>
+        </a>
+    </li>
+
+{% endblock navItem %}
 
 
 {% block content %}
-    <a href="{{ url_for('home.index') }}" onclick="leaveroom()"> <button type="button" class="btn-close"></button> </a>
-    <ul class="container-sm shadow" style="list-style: none;" id="messages">
-        
-        {% for chat in chats %}
 
-            <li> 
-                <span> 
-                {% for user in users %}
-                    {% if user.id == chat.author_id %} {{user.username}}: {% endif %}
+    <div  class="chat container px-3">
+
+        <header class="text-center">
+            <h1 class="display-4 text-black"> {{room.roomname}} </h1>
+        </header>
+    
+        <div class="row rounded-lg overflow-hidden shadow">
+        
+        <div class="col px-0">
+
+            <!-- Chat Box-->
+            <ul class="chat-box px-3 py-4 mb-0 bg-white" style="list-style: none;" id="messages">
+
+                {% for chat in chats %}
+                    {% if current_user.id != chat.author_id %}
+                    <!-- Sender Message-->
+                    <li class="media mb-3">
+                        <p class="small fst-italic mb-1">
+                            {% for user in users %}
+                                {% if user.id == chat.author_id %} {{user.username}}: {% endif %}
+                            {% endfor %}
+                        </p>
+                        <div class="media-body ml-3">
+                        <div class="bg-light rounded py-2 px-3 mb-2">
+                            <p class="text-small mb-0 text-muted"> {{chat.body}} </p>
+                            <span class="small text-muted"> {{chat.created.strftime("%B %d, %H:%M") }} </span>
+                        </div>
+                        
+                        </div>
+                    </li>
+
+                    {% else %}
+                    <!-- Reciever Message-->
+                    <li class="media ml-auto mb-3">
+                        <div class="media-body">
+                            <div class="bg-primary rounded py-2 px-3 mb-2">
+                                <p class="text-small mb-0 text-white"> {{chat.body}} </p>
+                                <span class="small text-muted"> {{ chat.created.strftime("%B %d at %I:%M %p") }} </span>
+
+                            </div>
+                        </div>
+                    </li>
+                    {% endif %}
+
                 {% endfor %}
-                </span> 
-                {{chat.body}}
-            </li>
-        {% endfor %}
-    </ul>
-    <form id="msg-form">
-        <input type="text" id="msg-input" autocomplete="off">
-        <button type="submit" class="btn-close">Send</button>
-    </form>
+
+            </ul>
+
+            <!-- Typing area -->
+            <form id="msg-form" class="bg-light border-top">
+            <div class="input-group ">
+                <input type="text" id="msg-input" autocomplete="off" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 py-2 border-0">
+                <div class="input-group-append d-flex justify-content-center align-items-center">
+                <button id="button-addon2" type="submit" class="btn btn-link h-100 bg-white"> <i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+            </form>
+    
+        </div>
+
+        </div>
+
+    </div>
+
 {% endblock content %}
     
 
 {% block script %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
 
 <script>
@@ -61,16 +123,37 @@
     function displayMessage(data) {
         const ul = document.getElementById("messages");
 
-        var li = document.createElement("li");
-        var li_span = document.createElement("span");
+        let li = document.createElement("li");
+        let time = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
 
-        li_span.innerHTML = data["sender"] + ": "
+        if (data["sender"] != "{{current_user.username}}"){
 
-        li.appendChild(li_span);
-        li.textContent += data["message"];
+            li.classList.add('media', 'mb-3');
+            li.innerHTML = `
+                <p class='small fst-italic mb-1'> ${data['sender']}: </p>
+                <div class='media-body ml-3'>
+                    <div class='bg-light rounded py-2 px-3 mb-2'>
+                        <p class="text-small mb-0 text-muted"> ${data["message"]} </p>
+                        <span class="small text-muted"> ${time} </span>
+                    </div>
+            
+                </div>`;
+        }else {
+
+            li.classList.add('media', 'ml-auto', 'mb-3');
+            li.innerHTML = `
+                <div class="media-body">
+                    <div class="bg-primary rounded py-2 px-3 mb-2">
+                        <p class="text-small mb-0 text-white"> ${data["message"]} </p>
+                        <span class="small text-muted"> ${time} </span>
+                    </div>
+                </div>`
+
+        }
 
         ul.appendChild(li);
         ul.scrollTop = ul.scrollHeight;
+
         console.log("received message");
     };
 
@@ -86,15 +169,13 @@
         if (message != "") {
             sio.emit("message", {"sender": "{{current_user.username}}", "message": message, "room_id": "{{room.id}}"});
             msgInput.value = '';
-            console.log("msg not empty")
         };
-        console.log("submited message")
+        console.log("submited message");
     };
 
     //display message to screen
     sio.on("message", function(data) { displayMessage(data) });
-    //sio.on("message", function() { console.log("received a message"); }, namespace="/chat/{{room.id}}" );
-
 
 </script>
+
 {% endblock script %}
