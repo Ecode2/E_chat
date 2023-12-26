@@ -3,8 +3,8 @@ from flask import Flask, render_template
 def create_app(config_filename= None):
     
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "development"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Chat.db"
+    app.config["SECRET_KEY"] = "pbkdf2:sha256:260000$Ebihs9MKsrkS8Q3z$3e803fa29f7d79a5fe26e18d463e1571c1b8c99992a47446f84873cdbde03c56"
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://hsibyhgefi:I2D43440YSEQC016$@e-chat-server.postgres.database.azure.com:5432/e-chat-database'
 
     if config_filename is not None:
         app.config.from_pyfile(config_filename)
