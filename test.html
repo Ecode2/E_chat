@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <title>Chatroom Design</title>
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 50px auto;
+      border: 1px solid #ced4da;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .chat-header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .chat-messages {
+      max-height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .message {
+      margin-bottom: 10px;
+    }
+
+    .message .user {
+      font-weight: bold;
+    }
+
+    .message .timestamp {
+      color: #868e96;
+      font-size: 12px;
+    }
+
+    .chat-input {
+      border-top: 1px solid #ced4da;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="chat-container">
+    <div class="chat-header">
+      <h4>Chatroom</h4>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <!-- Chat messages will be dynamically added here -->
+    </div>
+
+    <div class="chat-input">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Type your message" id="messageInput">
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+  function sendMessage() {
+    var messageInput = document.getElementById('messageInput');
+    var message = messageInput.value.trim();
+
+    if (message !== '') {
+      var chatMessages = document.getElementById('chatMessages');
+      var newMessage = document.createElement('div');
+      newMessage.classList.add('message');
+      newMessage.innerHTML = '<span class="user">You:</span> ' + message + '<br><span class="timestamp">' + getCurrentTime() + '</span>';
+      chatMessages.appendChild(newMessage);
+
+      // Clear the input field
+      messageInput.value = '';
+    }
+  }
+
+  function getCurrentTime() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    var timeString = hours + ':' + minutes + ' ' + ampm;
+    return timeString;
+  }
+</script>
+
+</body>
+</html>
