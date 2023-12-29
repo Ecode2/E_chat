@@ -1,10 +1,18 @@
 from flask import Flask, render_template
+import os
+from dotenv import load_dotenv
 
 def create_app(config_filename= None):
     
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "pbkdf2:sha256:260000$Ebihs9MKsrkS8Q3z$3e803fa29f7d79a5fe26e18d463e1571c1b8c99992a47446f84873cdbde03c56"
-    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://hsibyhgefi:I2D43440YSEQC016$@e-chat-server.postgres.database.azure.com:5432/e-chat-database'
+
+    # Load environment variables
+    load_dotenv()
+
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SQLALCHEMY_ECHO"] = True
 
     if config_filename is not None:
         app.config.from_pyfile(config_filename)

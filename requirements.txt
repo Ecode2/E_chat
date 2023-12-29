@@ -4,3 +4,5 @@ flask_wtf
 flask_socketio
 flask
 gunicorn
+psycopg2-binary
+python-dotenv

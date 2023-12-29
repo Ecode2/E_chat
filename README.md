@@ -47,7 +47,7 @@ cd E_chat
 4. Install application requirements using:
 
 ```bash
-python setup.py install
+pip install -r requirements.txt
 ```
 ![Login Page](assets/pic3.png)
 
@@ -56,10 +56,10 @@ python setup.py install
 Start up the app with
 
 ```bash
-python E_chat
+gunicorn run:app
 ```
 
-then go to ```localhost:5000``` on your browser and thats it
+then go to ```localhost:8000``` on your browser and thats it
 
 ![Login Page](assets/pic4.png)
 

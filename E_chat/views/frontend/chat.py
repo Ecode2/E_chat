@@ -17,7 +17,7 @@ def room(room_id):
         if session["room_id"] != room_id and session["room_validate"] != 'True':
             flash("Room password required", category="warning")
             session["rid"] = room_id
-            print("pass required")
+            
             return redirect(url_for("home.index", roomvalidate='True'))   
 
     except KeyError:
@@ -29,7 +29,7 @@ def room(room_id):
 
     room = Chatroom.query.filter_by(id=room_id).first()
     chats = Chat.query.filter_by(room_id=room_id)
-    print(chats)
+    
     
 
     users = Users.query.all()
@@ -39,6 +39,7 @@ def room(room_id):
 @sio.on("join")
 @login_required
 def on_join(data):
+    
     room_id = data["room_id"]
     join_room(room_id)
     emit("message", {"sender": "System", "message": f"{current_user.username} joined the room "}, room=room_id, broadcast=True)
@@ -48,10 +49,12 @@ def on_join(data):
 @sio.on("leave")
 @login_required
 def on_leave(data):
+
     room_id = data["room_id"]
     leave_room(room_id)
     emit("message", {"sender": "System", "message": f"{current_user.username} left the room "}, room=room_id, broadcast=True)
     print("Left room")
+
     # reset session values
     session["rid"] = ""
     session["room_id"] = ""
