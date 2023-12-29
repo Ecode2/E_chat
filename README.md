@@ -56,7 +56,7 @@ pip install -r requirements.txt
 Start up the app with
 
 ```bash
-gunicorn run:app
+gunicorn --worker-class eventlet -w 1 run:app
 ```
 
 then go to ```localhost:8000``` on your browser and thats it

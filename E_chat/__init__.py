@@ -12,7 +12,7 @@ def create_app(config_filename= None):
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SQLALCHEMY_ECHO"] = True
+    
 
     if config_filename is not None:
         app.config.from_pyfile(config_filename)

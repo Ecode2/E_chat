@@ -29,7 +29,6 @@ def index():
 
     valid = request.args.get(key="roomvalidate", default='False', type=str)
     if valid == 'True':
-        print("true")
         roomvalidate = 'True'
         usr = session["rid"]
 

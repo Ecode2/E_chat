@@ -42,7 +42,7 @@
                     <div class="col">
                         <div class="d-flex justify-content-center rounded rooms">
                             <div class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center my-3 mx-4 d-inline-block bs-icon sm w-10" 
-                                onclick="copyLink('https://' + document.domain + ':' + location.port + '{{url_for('chat.room', room_id=room.id)}}')" >
+                                onclick="copyLink('document.domain + ':' + location.port + '{{url_for('chat.room', room_id=room.id)}}')" >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none">
                                     <path d="M13 7H7V5H13V7Z" fill="currentColor"></path>
                                     <path d="M13 11H7V9H13V11Z" fill="currentColor"></path>

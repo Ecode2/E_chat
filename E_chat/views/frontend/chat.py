@@ -5,25 +5,29 @@ from flask_login import current_user, login_required
 from E_chat.events import sio
 from flask_socketio import join_room, leave_room, emit
 from datetime import datetime
+import os
+from werkzeug.security import check_password_hash, generate_password_hash
+from dotenv import load_dotenv
 
 chat = Blueprint('chat',__name__, url_prefix="/chat")
-
+load_dotenv()
 
 @chat.route('/<int:room_id>', methods=["GET", "POST"])
 @login_required
 def room(room_id):
-    # Confirm if password has been inputed
-    try:     
-        if session["room_id"] != room_id and session["room_validate"] != 'True':
+    if int(current_user.id) != 1 and current_user.username != "Admin" and not check_password_hash(current_user.password, os.getenv("ADMIN_PASSWORD")):
+        # Confirm if password has been inputed
+        try:     
+            if session["room_id"] != room_id and session["room_validate"] != 'True':
+                flash("Room password required", category="warning")
+                session["rid"] = room_id
+                
+                return redirect(url_for("home.index", roomvalidate='True'))   
+
+        except KeyError:
             flash("Room password required", category="warning")
             session["rid"] = room_id
-            
-            return redirect(url_for("home.index", roomvalidate='True'))   
-
-    except KeyError:
-        flash("Room password required", category="warning")
-        session["rid"] = room_id
-        return redirect(url_for("home.index", roomvalidate='True'))
+            return redirect(url_for("home.index", roomvalidate='True'))
 
     
 

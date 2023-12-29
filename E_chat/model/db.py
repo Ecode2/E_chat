@@ -18,10 +18,10 @@ class Users(db.Model, UserMixin):
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    room_id = db.Column(db.Integer, db.ForeignKey("chatroom.id"), nullable=False)
+    body = db.Column(db.Text)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    room_id = db.Column(db.Integer, db.ForeignKey("chatroom.id"))
 
     def __repr__(self) -> str:
         return f"<Chat {self.body}>"
@@ -29,9 +29,9 @@ class Chat(db.Model):
     
 class Chatroom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    roomname = db.Column(db.String(50), nullable=False, unique=True)
-    roompass = db.Column(db.String(500), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    roomname = db.Column(db.String(50), unique=True)
+    roompass = db.Column(db.String(500))
+    date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     room = db.relationship("Chat", backref="chatroom", lazy=True)
 

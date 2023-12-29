@@ -6,3 +6,5 @@ flask
 gunicorn
 psycopg2-binary
 python-dotenv
+gevent
+eventlet
