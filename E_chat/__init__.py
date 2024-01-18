@@ -10,7 +10,7 @@ def create_app(config_filename= None):
     load_dotenv()
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    app.config["SQLALCHEMY_DATABASE_URI"] = 'postgresql://piwarjam:fYgSWfDihYh-eGKyquUss3G3vkY-VuL9@drona.db.elephantsql.com/piwarjam' #os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     
 
