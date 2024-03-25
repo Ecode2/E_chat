@@ -2,7 +2,6 @@
 
 This is a Chatroom Web Application made with flask
 
-
 ![Login Page](assets/pic1.png)
 
 ### About
@@ -17,7 +16,7 @@ With wide range of features which include:
 - Creating ChatRooms
 - Adding password requirements to the chatroom
 - Joining different rooms with a password
-  
+
 ![Login Page](assets/pic2.png)
 
 ## Getting Started
@@ -49,6 +48,15 @@ cd E_chat
 ```bash
 pip install -r requirements.txt
 ```
+
+5. Fill the necessary environmental vairables in the .env file
+```python
+DATABASE_URL
+SECRET_KEY
+ADMIN_USERNAME
+ADMIN_PASSWORD
+```
+
 ![Login Page](assets/pic3.png)
 
 ## Using The App
@@ -56,10 +64,10 @@ pip install -r requirements.txt
 Start up the app with
 
 ```bash
-gunicorn --worker-class eventlet -w 1 run:app
+python run.py
 ```
 
-then go to ```localhost:8000``` on your browser and thats it
+then go to ```localhost:8080``` on your browser and thats it
 
 ![Login Page](assets/pic4.png)
 

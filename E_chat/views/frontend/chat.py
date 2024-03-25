@@ -15,7 +15,7 @@ load_dotenv()
 @chat.route('/<int:room_id>', methods=["GET", "POST"])
 @login_required
 def room(room_id):
-    if int(current_user.id) != 1 and current_user.username != "Admin" and not check_password_hash(current_user.password, os.getenv("ADMIN_PASSWORD")):
+    if int(current_user.id) != 1 and current_user.username != os.getenv("ADMIN_USERNAME") and not check_password_hash(current_user.password, os.getenv("ADMIN_PASSWORD")):
         # Confirm if password has been inputed
         try:     
             if session["room_id"] != room_id and session["room_validate"] != 'True':
