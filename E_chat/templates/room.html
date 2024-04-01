@@ -26,7 +26,7 @@
 
 {% block content %}
 
-    <div  class="chat container px-3">
+    <section  class="chat container px-3">
 
         <header class="text-center">
             <h1 class="display-4 text-black"> {{room.roomname}} </h1>
@@ -34,61 +34,153 @@
     
         <div class="row rounded-lg overflow-hidden shadow">
         
-        <div class="col px-0">
+            <div class="col px-0">
 
-            <!-- Chat Box-->
-            <ul class="chat-box px-3 py-4 mb-0 bg-white" style="list-style: none;" id="messages">
+                <!-- Chat Box-->
+                <ul class="chat-box px-3 py-4 mb-0 bg-white" style="list-style: none;" id="messages">
 
-                {% for chat in chats %}
-                    {% if current_user.id != chat.author_id %}
-                    <!-- Sender Message-->
-                    <li class="media mb-3">
-                        <p class="small fst-italic mb-1">
-                            {% for user in users %}
-                                {% if user.id == chat.author_id %} {{user.username}}: {% endif %}
-                            {% endfor %}
-                        </p>
-                        <div class="media-body ml-3">
-                        <div class="bg-light rounded py-2 px-3 mb-2">
-                            <p class="text-small mb-0 text-muted"> {{chat.body}} </p>
-                            <span class="small text-muted"> {{chat.created.strftime("%B %d, %H:%M") }} </span>
-                        </div>
-                        
-                        </div>
-                    </li>
+                    {% for chat in chats %}
+                        {% if current_user.id != chat.author_id %}
+                        <!-- Sender Message-->
+                        <li class="media mb-3">
+                            <p class="small fst-italic mb-1">
+                                {% for user in users %}
+                                    {% if user.id == chat.author_id %} {{user.username}}: {% endif %}
+                                {% endfor %}
+                            </p>
+                            <div class="media-body ml-3">
+                            <div class="bg-light rounded py-2 px-3 mb-2">
+                                {% if 'Files/' in chat.body %}
 
-                    {% else %}
-                    <!-- Reciever Message-->
-                    <li class="media ml-auto mb-3">
-                        <div class="media-body">
-                            <div class="bg-primary rounded py-2 px-3 mb-2">
-                                <p class="text-small mb-0 text-white"> {{chat.body}} </p>
-                                <span class="small text-muted"> {{ chat.created.strftime("%B %d at %I:%M %p") }} </span>
+                                    {% set room_str = room.id | string %}
 
+                                    {% if 'Files/Images/' in chat.body %}
+                                        <img class=" w-100 d-block fit-cover" style="height: 200px;" alt="image file" src="{{ url_for('static', filename=chat.body ) }}" />
+                                    {% elif 'Files/Videos' in chat.body %}
+
+                                        <video controls style="height: 250px" class=" w-100 d-block fit-cover">
+                                            <source src="{{ url_for('static', filename=chat.body) }}" type="video/mp4">
+                                            <source src="{{ url_for('static', filename=chat.body) }}" type="video/mkv">
+                                        </video>
+
+                                    {% elif 'Files/Audios' in chat.body %}
+                                    {% set audio_name = chat.body.split('/') %}
+                                        <audio controls > 
+                                            <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/mp3">
+                                            <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/wav">
+                                            <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/ogg">
+
+                                            {{ audio_name[-1] }} </audio>
+                                    {% else %}
+                                        {% set file_name = chat.body.split('/') %}
+                                        <a href="{{ url_for('static', filename=chat.body ) }}" class="btn-link text-dark" > <svg class="bi bi-file-text-fill" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                            <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z"></path>
+                                        </svg> {{ file_name[-1] }} </a>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="text-small mb-0 text-muted"> {{chat.body}} </p>
+                                {% endif %}
+
+                                <span class="small text-muted"> {{chat.created.strftime("%B %d, %H:%M") }} </span>
                             </div>
+                            
+                            </div>
+                        </li>
+
+                        {% else %}
+                        <!-- Reciever Message-->
+                        <li class="media ml-auto mb-3">
+                            <div class="media-body">
+                                <div class="bg-primary rounded py-2 px-3 mb-2">
+
+                                    {% if 'Files/' in chat.body %}
+
+                                    {% set room_str = room.id | string %}
+
+                                        {% if 'Files/Images/' in chat.body %}
+                                            <img class=" w-100 d-block fit-cover" style="height: 200px;" alt="image file" src="{{ url_for('static', filename=chat.body ) }}" />
+                                        {% elif 'Files/Videos' in chat.body %}
+                                        
+
+                                            <video controls style="height: 250px" class=" w-100 d-block fit-cover">
+                                                <source src="{{ url_for('static', filename=chat.body) }}" type="video/mp4">
+                                                <source src="{{ url_for('static', filename=chat.body) }}" type="video/mkv">
+                                            </video>
+
+                                        {% elif 'Files/Audios' in chat.body %}
+                                        {% set audio_name = chat.body.split('/') %}
+                                            <audio controls > 
+                                                <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/mp3">
+                                                <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/wav">
+                                                <source src="{{ url_for('static', filename=chat.body ) }}" type="audio/ogg"> 
+
+                                                {{ audio_name[-1] }} </audio>
+                                        {% else %}
+                                            {% set file_name = chat.body.split('/') %}
+                                            <a href="{{ url_for('static', filename=chat.body ) }}" class="text-small text-dark" >  
+                                                <svg class="bi bi-file-text-fill" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z"></path>
+                                                </svg> {{ file_name[-1] }} </a>
+                                        {% endif %}
+
+                                    {% else %}
+                                        <p class="text-small mb-0 text-muted"> {{chat.body}} </p>
+                                    {% endif %}
+
+                                    <span class="small text-muted"> {{ chat.created.strftime("%B %d at %I:%M %p") }} </span>
+
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </ul>
+
+                <!-- Typing area -->
+                <form id="msg-form" class="bg-light border-top">
+                <div class="input-group ">
+                    <input type="text" id="msg-input" autocomplete="off" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 py-2 border-0">
+                    <div class="input-group-append d-flex justify-content-center align-items-center">
+                        <button id="button-addon2" type="button" class="btn btn-link h-100 bg-white" data-bs-toggle="modal" data-bs-target="#modal-file"> <i class="fa fa-paperclip"></i></button>
                         </div>
-                    </li>
-                    {% endif %}
+                    <div class="input-group-append d-flex justify-content-center align-items-center">
+                    <button id="button-addon2" type="submit" class="btn btn-link h-100 bg-white"> <i class="fa fa-paper-plane"></i></button>
+                    </div>
+                </div>
+                </form>
+        
+            </div>
 
-                {% endfor %}
+        </div>
 
-            </ul>
-
-            <!-- Typing area -->
-            <form id="msg-form" class="bg-light border-top">
-            <div class="input-group ">
-                <input type="text" id="msg-input" autocomplete="off" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 py-2 border-0">
-                <div class="input-group-append d-flex justify-content-center align-items-center">
-                <button id="button-addon2" type="submit" class="btn btn-link h-100 bg-white"> <i class="fa fa-paper-plane"></i></button>
+        <article class="modal fade" role="dialog" tabindex="-1" id="modal-file">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title"><strong> Upload A File </strong></h2>
+                        <button class="btn-close" type="button" aria-label="Close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="text-center" id="file-upload" method="post">
+                            <div class="mb-3">
+                                <label for="file-field", class="form-label"><strong> File: </strong></label>
+                                <input class="form-control" id="file-field" required type="file" />
+                            </div>
+                            <div class="mb-3">
+                                <button id="button-addon2" type="submit" class="btn btn-primary d-block w-100 btn-link text-decoration-none text-dark"> Upload </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
-            </form>
-    
-        </div>
+        </article>
 
-        </div>
-
-    </div>
+    </section>
 
 {% endblock content %}
     
@@ -106,7 +198,7 @@
         sio.emit("join", {room_id: '{{room.id}}'});
         console.log("Joined room");
     };
-
+    
     // Leave the room by leaving the webpage
     function disconnect(){
         sio.emit("leave", {room_id: '{{room.id}}'});
@@ -157,7 +249,7 @@
         console.log("received message");
     };
 
-    // Send message to  server
+    // Send message to the server
     const MsgForm = document.getElementById("msg-form");
 
     MsgForm.onsubmit = function(event) {
@@ -175,6 +267,186 @@
 
     //display message to screen
     sio.on("message", function(data) { displayMessage(data) });
+    
+    // send a file to the server
+    const FileForm = document.getElementById("file-upload");
+
+    FileForm.onsubmit = function(event) {
+        event.preventDefault();
+
+        let file = document.getElementById("file-field");
+
+        // Check if a file is selected
+        if (file.files.length > 0 && file.files[0]["size"] < 50*1024*1024) {
+            let file_data = file.files[0];
+            let formData = new FormData(); // Create FormData object to store file data
+
+            
+            // Append the file to the FormData object
+            formData.append('file', file_data);
+            console.log(formData.get("file"));
+
+
+            let file_type = "";
+            
+            if (file_data.type.split('/')[0] == "image") {
+                file_type = "Images"
+            }else if (file_data.type.split('/')[0] == "audio") {
+                file_type = "Audios"
+            }else if (file_data.type.split('/')[0] == "video") {
+                file_type = "Videos"
+            }else {
+                file_type = "Documents"
+            }
+
+            
+            let file_name = file_data.name;
+
+            sio.emit("file_upload", {"sender": "{{current_user.username}}", "file": formData.get("file"), "file_name": file_name, "file_type": file_type, "room_id": "{{room.id}}"});
+            file.value = null;
+
+            console.log("sent a file");
+
+        }else {
+            if (file.files[0]["size"] > 50*1024*1024) {
+                alert("Upload a file less than 50MB")
+            }else {
+            alert("Select a file to upload");
+            }
+        }
+
+    }
+
+    // receive message function
+    function displayFile(data) {
+        const ul = document.getElementById("messages");
+
+        let li = document.createElement("li");
+        let time = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+
+        if (data["sender"] != "{{current_user.username}}"){
+
+            if (data["message"][1] == "Images"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <p class='small fst-italic mb-1'> ${data['sender']}: </p>
+                    <div class='media-body ml-3'>
+                        <div class='bg-light rounded py-2 px-3 mb-2'>
+                            <img class=" w-100 d-block fit-cover" style="height: 200px;" alt="image file" src="{{ url_for('static', filename='${data["message"][0]}') }}" />
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else if (data["message"][1] == "Audios"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <p class='small fst-italic mb-1'> ${data['sender']}: </p>
+                    <div class='media-body ml-3'>
+                        <div class='bg-light rounded py-2 px-3 mb-2'>
+                            <audio controls > 
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/mp3">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/wav"> 
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/ogg"> 
+                                
+                                ${data["message"][0].split('/')[-1]} </audio>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else if (data["message"][1] == "Videos"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <p class='small fst-italic mb-1'> ${data['sender']}: </p>
+                    <div class='media-body ml-3'>
+                        <div class='bg-light rounded py-2 px-3 mb-2'>
+                            <video controls style="height: 250px" class=" w-100 d-block fit-cover">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}') }}" type="video/mp4">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}') }}" type="video/mkv">
+                            </video>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else {
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <p class='small fst-italic mb-1'> ${data['sender']}: </p>
+                    <div class='media-body ml-3'>
+                        <div class='bg-light rounded py-2 px-3 mb-2'>
+                            <a href="{{ url_for('static', filename='${data["message"][0]}' ) }}" class="text-small text-dark" >  
+                                <svg class="bi bi-file-text-fill" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z"></path>
+                                </svg> ${data["message"][0].split('/')[-1]} </a>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }
+
+        }else {
+
+            if (data["message"][1] == "Images"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <div class='media-body ml-3'>
+                        <div class='bg-primary rounded py-2 px-3 mb-2'>
+                            <img class=" w-100 d-block fit-cover" style="height: 200px;" alt="image file" src="{{ url_for('static', filename='${data["message"][0]}') }}" />
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else if (data["message"][1] == "Audios"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <div class='media-body ml-3'>
+                        <div class='bg-primary rounded py-2 px-3 mb-2'>
+                            <audio controls > 
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/mp3">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/wav"> 
+                                <source src="{{ url_for('static', filename='${data["message"][0]}' ) }}" type="audio/ogg"> 
+                                
+                                ${data["message"][0].split('/')[-1]} </audio>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else if (data["message"][1] == "Videos"){
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <div class='media-body ml-3'>
+                        <div class='bg-primary rounded py-2 px-3 mb-2'>
+                            <video controls style="height: 250px" class=" w-100 d-block fit-cover">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}') }}" type="video/mp4">
+                                <source src="{{ url_for('static', filename='${data["message"][0]}') }}" type="video/mkv">
+                            </video>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }else {
+                li.classList.add('media', 'mb-3');
+                li.innerHTML = `
+                    <div class='media-body ml-3'>
+                        <div class='bg-primary rounded py-2 px-3 mb-2'>
+                            <a href="{{ url_for('static', filename='${data["message"][0]}' ) }}" class="text-small text-dark" >  
+                                <svg class="bi bi-file-text-fill" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM5 4h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1zm0 2h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1 0-1z"></path>
+                                </svg> ${data["message"][0].split('/')[-1]} </a>
+                            <span class="small text-muted"> ${time} </span>
+                        </div>
+                
+                    </div>`;
+            }
+        }
+
+        ul.appendChild(li);
+        ul.scrollTop = ul.scrollHeight;
+
+        console.log("received file");
+    };
+
+    //display file to screen
+    sio.on("file_upload", function(data) { displayFile(data) });
 
 </script>
 

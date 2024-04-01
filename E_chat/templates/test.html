@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <iframe src="" allow="fullscreen" frameborder="0" width="560" height="315"></iframe>
+    <video src=""></video>
+    <audio controls src="">
+        <source src="" type="">
+
+    </audio>
+
+    <form >
+        <input type="file" name="file" id="file">
+        <button type="submit">submit</button>
+    </form>
+    
+    <script>
+        let form = document.querySelector("form")
+
+        form.onsubmit = function(event) {
+            event.preventDefault();
+
+            file =document.getElementById("file")
+
+            //console.log(file)
+            // Check if a file is selected
+            if (file.files.length > 0) {
+                const file_data = file.files[0];
+                const formData = new FormData(); // Create FormData object to store file data
+                
+                // Append the file to the FormData object
+                formData.append('file', file_data);
+
+
+                let file_type = ""
+                
+                if (file_data.type.split('/')[0] == "image") {
+                    file_type = "Images"
+                }else if (file_data.type.split('/')[0] == "audio") {
+                    file_type = "Audios"
+                }else if (file_data.type.split('/')[0] == "video") {
+                    file_type = "Videos"
+                }else {
+                    file_type = "Documents"
+                }
+
+
+                // Create an object with file data, filename, and file type
+                const fileInfo = {
+                data: file_data,
+                filename: file.name,
+                fileType: file.type
+                };
+
+                console.log(...formData, file_data["size"] );
+
+            };
+        }
+
+    </script>
+
+</body>
+</html>

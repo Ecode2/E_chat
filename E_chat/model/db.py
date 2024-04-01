@@ -25,6 +25,18 @@ class Chat(db.Model):
 
     def __repr__(self) -> str:
         return f"<Chat {self.body}>"
+    
+    @classmethod
+    def create(cls, db, author_id: int, room_id: int, body: str):
+
+        if not author_id or not room_id or not body:
+            return False
+
+        add_chat = cls(author_id=author_id, room_id=room_id, body=body)
+        db.session.add(add_chat)
+        db.session.commit()
+
+        return add_chat
 
     
 class Chatroom(db.Model):
