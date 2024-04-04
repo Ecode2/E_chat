@@ -14,15 +14,6 @@ hdlr.formatter = logging.Formatter("%(filename)s :: %(funcName)s :: %(levelname)
 logger = logging.Logger("FLASKER_logger")
 logger.addHandler(hdlr)
 
-os.environ["DATABASE_URL"] = "postgresql://rjmyfoby:AebR9C3SScGn4CiBYhMsxzE0GkYD5Kmb@raja.db.elephantsql.com/rjmyfoby"
-
-os.environ["SECRET_KEY"] =  "ThisIsMy1PasswordForMicrosoftAzure"
-
-os.environ["ADMIN_USERNAME"] = "Admin"
-
-os.environ["ADMIN_PASSWORD"] = "ThisIsMy1PasswordForMicrosoftAzure"
-
-
 def create_app(config_filename= None):
     
     app = Flask(__name__)
