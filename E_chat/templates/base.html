@@ -45,7 +45,7 @@
 
     {% for category, message in get_flashed_messages(with_categories=True) %} 
 
-        <div class="alert alert-{{category}} alert-dismissible fade show container-sm" role="alert">
+        <div class="alert alert-{{category}} z-index-7 alert-dismissible fade show container-sm" role="alert">
             {{message}}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
