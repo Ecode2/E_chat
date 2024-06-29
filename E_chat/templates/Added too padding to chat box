@@ -34,10 +34,10 @@
     
         <div class="row rounded-lg overflow-hidden shadow">
         
-            <div class="col px-0">
+            <div class="col px-0 py-4">
 
                 <!-- Chat Box-->
-                <ul class="chat-box px-3 py-4 mb-0 bg-white" style="list-style: none;" id="messages">
+                <ul class="chat-box px-3 py-6 mb-0 bg-white" style="list-style: none;" id="messages">
 
                     {% for chat in chats %}
                         {% if current_user.id != chat.author_id %}
